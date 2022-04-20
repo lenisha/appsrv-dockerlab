@@ -11,6 +11,7 @@
 
 ## Labs
 [01-Building and Deploying Python Container on App Service](./01-PythonContainer.md)
+
 [02-Deploying MatterMost Container on App Service](./02-MatterMostContainer.md)
 
 
@@ -20,3 +21,17 @@
 [Speed Up The Build of Your Python Docker Image](https://vsupalov.com/speed-up-python-docker-image-build/)
 
 [How Does the Docker Cache Work](https://vsupalov.com/docker-cache/)
+
+[Docker Best Practices for Python Developers](https://testdriven.io/blog/docker-best-practices/#use-unprivileged-containers)
+
+[Containers for Beginners (DevOps with Docker Labs)](https://devopswithdocker.com/)
+
+
+[MS Learn Intro to Docker](https://docs.microsoft.com/en-us/learn/modules/intro-to-docker-containers/)
+
+[KataCoda Docker](https://katacoda.com/courses/docker)
+
+[Training with Docker Labs](https://training.play-with-docker.com/)
+
+
+[KodeKloud Docker for beginners](https://kodekloud.com/courses/docker-for-the-absolute-beginner/)
