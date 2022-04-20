@@ -6,7 +6,7 @@
 
 ```sh
 git clone git@github.com:lenisha/translator_deploy-1.git
-cd translator_deploy-1.git
+cd translator_deploy-1
 ```
 
 
