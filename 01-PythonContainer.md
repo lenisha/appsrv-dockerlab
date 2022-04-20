@@ -20,6 +20,19 @@ docker images
 
 Note: build takes around 7 min and all consequent builds take same time to reinstall `requirements.txt`
 
+
+## 2.1 Run image locally
+
+```sh
+docker run --rm -d --name translator -p 8050:8050 translator:v1
+
+#  check running container
+docker ps
+CONTAINER ID   IMAGE           COMMAND           CREATED         STATUS         PORTS
+    NAMES
+49fd77d490f4   translator:v1   "python app.py"   4 seconds ago   Up 3 seconds   0.0.0.0:8050->8050/tcp, :::8050->8050/tcp   translator
+```
+
 ## 3. Build Docker image using **faster** method that will reuse cached laeyrs and only rebuild application layer
 
 ```sh
