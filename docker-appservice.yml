@@ -1,0 +1,37 @@
+# https://docs.docker.com/compose/environment-variables/
+
+version: "2.4"
+services:
+  mattermost:
+
+    container_name: mattermost
+    ## REPLACE your image tag
+    image: clcontainers.azurecr.io/mattermost/mattermost-enterprise-edition:6.3 
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 200
+    read_only: false
+    tmpfs:
+      - /tmp
+    volumes:
+      - /mattermost/config:/mattermost/config:rw
+      - /mattermost/data:/mattermost/data:rw
+      - /mattermost/logs:/mattermost/logs:rw
+      - /mattermost/plugins:/mattermost/plugins:rw
+      - /mattermost/client/plugins:/mattermost/client/plugins:rw
+      - /mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
+
+    environment:
+      # timezone inside container
+      - TZ=UTC
+
+      # necessary Mattermost options/variables (see env.example)
+      - MM_SQLSETTINGS_DRIVERNAME=postgres
+      - MM_SQLSETTINGS_DATASOURCE=${MM_SQLSETTINGS_DATASOURCE}
+      # necessary for bleve
+      - MM_BLEVESETTINGS_INDEXDIR=/mattermost/bleve-indexes
+      # REPLACE with Domain name for App Service
+      - MM_SERVICESETTINGS_SITEURL=https://mattermosten.azurewebsites.net
+
+
