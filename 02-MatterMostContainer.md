@@ -114,6 +114,12 @@ See `appsettings.json` for example configuration in this repo.
 
 - For troubleshooting use `Log Stream`
 
+## 7. Optional - Configure healthcheck
+
+To improve availability add healthcheck
+
+![app](./docs/healthcheck.jpg)
+
 ## References
 [Create a multi-container (preview) app in Web App for Containers](https://docs.microsoft.com/en-us/azure/app-service/tutorial-multi-container-app)
 
