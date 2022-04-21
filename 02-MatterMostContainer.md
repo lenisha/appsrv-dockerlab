@@ -23,7 +23,7 @@ Mattermost server also uses storage volumes to store indexes and configuration e
 - Create ACR (if not yet created previously)
 
 
-## 3. Import mattermot container to ACR
+## 3. Import mattermost container to ACR
 
 - Login to azure using `az login`
 
@@ -34,65 +34,79 @@ Mattermost server also uses storage volumes to store indexes and configuration e
 az acr import -n clcontainers --source  docker.io/mattermost/mattermost-enterprise-edition:6.3 --image mattermost/mattermost-enterprise-edition:6.3
 ```
 
+## 4. Run Docker Compose Locally [Optionally]
 
-## 4. Create Azure App Service
+- Create your .env file by copying and adjusting the env.example file
 
-- Create WebApp with Setting to Linux and Docker and upload `docker-appservice.yml` from this repo
+```sh
+cp env.example .env
+```
+
+- Edit `.env`  to replace values for  `POSTGRES_PASSWORD` to the created DB passoword and set image in `docker-appservice.yaml` to the ACR image tag
+
+- Create the required directories and set their permissions
+
+```sh
+mkdir -p ./volumes/app/mattermost/{config,data,logs,plugins,client/plugins,bleve-indexes}
+sudo chown -R 2000:2000 ./volumes/app/mattermost
+```
+
+
+- Run docker compose locally
+
+```sh
+ docker-compose -f docker-appservice.yml  -f docker-local.yml up -d
+```
+- Verify site navigating to http://127.0.0.1.nip.io:8065/
+
+- Shutdown docker
+
+```sh
+ docker-compose -f docker-appservice.yml  -f docker-local.yml down -d
+```
+
+
+## 5. Create Azure App Service
+
+- Create WebApp with Setting it to use Linux and Docker and upload `docker-appservice.yml` from this repo
 
 ![app](./docs/appsvcdocker.jpg)
 
+You could choose single container or Compose (Preview) to run the AppService
 ![app](./docs/compose.jpg)
 
-- Edit ``docker-appservice.yml`  to replace values for `image:` to your ACR server and `MM_SERVICESETTINGS_SITEURL` to point to your appservice domain
+### 5.1 Deploying Single Container
+- Set Container from ACR in Deployment Center
+![app](./docs/singlecont.jpg)
 
-```yaml
-version: "2.4"
-services:
-  mattermost:
+### 5.1 Deploying Multi Container Container
+- Upload `docker-appservice.yaml` Compose YAML definition in Deployment Center
 
-    container_name: mattermost
-    ## REPLACE your image tag
-    image: clcontainers.azurecr.io/mattermost/mattermost-enterprise-edition:6.3 
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
-    pids_limit: 200
-    read_only: false
-    tmpfs:
-      - /tmp
-    volumes:
-      - /mattermost/config:/mattermost/config:rw
-      - /mattermost/data:/mattermost/data:rw
-      - /mattermost/logs:/mattermost/logs:rw
-      - /mattermost/plugins:/mattermost/plugins:rw
-      - /mattermost/client/plugins:/mattermost/client/plugins:rw
-      - /mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
+![app](./docs/multicont.jpg)
 
-    environment:
-      # timezone inside container
-      - TZ=UTC
 
-      # necessary Mattermost options/variables (see env.example)
-      - MM_SQLSETTINGS_DRIVERNAME=postgres
-      - MM_SQLSETTINGS_DATASOURCE=${MM_SQLSETTINGS_DATASOURCE}
-      # necessary for bleve
-      - MM_BLEVESETTINGS_INDEXDIR=/mattermost/bleve-indexes
-      # REPLACE with Domain name for App Service
-      - MM_SERVICESETTINGS_SITEURL=https://mattermosten.azurewebsites.net
 
-```
 
-- Update AppService Compose YAML in Deployment Center
+## 6. Update settings and create File Mappings
 
-## 5. Update settings and create File Mappings
+- As shown in Docker Compose YAML we need to set env  variables  
+  - `MM_SQLSETTINGS_DATASOURCE` to Azure Postgres connection string 
+  - `MM_SERVICESETTINGS_SITEURL` to App Service URL
+  - `MATTERMOST_VOLUME_PATH` volume path
+  - `WEBSITES_PORT` to mattermost container exposed port. 
 
-- As shown in Docker Compose YAML we need to set Connection string variable  `MM_SQLSETTINGS_DATASOURCE` to Azure Postgres connection string and `WEBSITES_PORT` to mattermost container exposed port. 
+- if Running Single Container (hard-coded in compose yaml)
+
+  - `TZ` to time zone
+  - `MM_SQLSETTINGS_DRIVERNAME` postgress drivername
+  - `MM_BLEVESETTINGS_INDEXDIR` path to indexes
 
 ![app](./docs/appsettings.jpg)
 
 See `appsettings.json` for example configuration in this repo.
 
-- Create file mappings in App Service settings pointing to Azure Files in Storage Account and giving same names in share as in Compose manifest `/mattermost/config|data|logs`
+### 6.2 Create file mappings 
+- create file mappings in App Service settings pointing to Azure Files in Storage Account and giving same names in share as in Compose manifest `/mattermost/config|data|logs`
 
 ![app](./docs/appsvcfileshare.jpg)
 

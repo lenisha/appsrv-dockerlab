@@ -1,12 +1,10 @@
-# https://docs.docker.com/compose/environment-variables/
-
 version: "2.4"
 services:
   mattermost:
 
     container_name: mattermost
     ## REPLACE your image tag
-    image: clcontainers.azurecr.io/mattermost/mattermost-enterprise-edition:6.3 
+    image: clcontainers.azurecr.io/mattermost/mattermost-enterprise-edition:6.3
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -14,13 +12,14 @@ services:
     read_only: false
     tmpfs:
       - /tmp
+
     volumes:
-      - /mattermost/config:/mattermost/config:rw
-      - /mattermost/data:/mattermost/data:rw
-      - /mattermost/logs:/mattermost/logs:rw
-      - /mattermost/plugins:/mattermost/plugins:rw
-      - /mattermost/client/plugins:/mattermost/client/plugins:rw
-      - /mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
+      - ${MATTERMOST_VOLUME_PATH}/config:/mattermost/config:rw
+      - ${MATTERMOST_VOLUME_PATH}/data:/mattermost/data:rw
+      - ${MATTERMOST_VOLUME_PATH}/logs:/mattermost/logs:rw
+      - ${MATTERMOST_VOLUME_PATH}/plugins:/mattermost/plugins:rw
+      - ${MATTERMOST_VOLUME_PATH}/client/plugins:/mattermost/client/plugins:rw
+      - ${MATTERMOST_VOLUME_PATH}/bleve-indexes:/mattermost/bleve-indexes:rw
 
     environment:
       # timezone inside container
@@ -32,6 +31,6 @@ services:
       # necessary for bleve
       - MM_BLEVESETTINGS_INDEXDIR=/mattermost/bleve-indexes
       # REPLACE with Domain name for App Service
-      - MM_SERVICESETTINGS_SITEURL=https://mattermosten.azurewebsites.net
+      - MM_SERVICESETTINGS_SITEURL=${MM_SERVICESETTINGS_SITEURL}
 
 
