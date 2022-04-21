@@ -10,9 +10,9 @@
 -	[Optional] Windows Terminal https://docs.microsoft.com/en-us/windows/terminal/ 
 
 ## Labs
-[01-Building and Deploying Python Container on App Service](./01-PythonContainer.md)
+[01-Building and Deploying Python Container on App Service](./01-PythonContainer.md) - basic tutorial running Python Dash/Flask application locally as docker container and deploying it to App Service
 
-[02-Deploying MatterMost Container on App Service](./02-MatterMostContainer.md)
+[02-Deploying MatterMost Container on App Service](./02-MatterMostContainer.md) - more advanced scenario to run vendor container with docker-compose locally and on App Service and enable persistestence by mapping Azure Files to App Service
 
 
 
