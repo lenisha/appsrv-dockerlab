@@ -34,6 +34,17 @@ Mattermost server also uses storage volumes to store indexes and configuration e
 az acr import -n clcontainers --source  docker.io/mattermost/mattermost-enterprise-edition:6.3 --image mattermost/mattermost-enterprise-edition:6.3
 ```
 
+- Optional could pull image and inspect it
+
+```
+docker pull mattermost/mattermost-enterprise-edition:6.3
+docker inspect mattermost/mattermost-enterprise-edition:6.3
+```
+
+Note ports and volumes expected by the container
+
+![app](./docs/inspect.jpg)
+
 ## 4. Run Docker Compose Locally [Optionally]
 
 - Create your .env file by copying and adjusting the env.example file
